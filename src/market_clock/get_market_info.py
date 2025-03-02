@@ -4,6 +4,7 @@ from datetime import date
 import pytz
 
 ALL_MARKET_INFO = {
+    # https://www.hkex.com.hk/Services/Trading-hours-and-Severe-Weather-Arrangements/Trading-Hours/Securities-Market
     "HKEX": {
         "timezone": pytz.timezone("Asia/Hong_Kong"),
         "trading_weekdays": {0, 1, 2, 3, 4},
