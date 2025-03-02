@@ -4,6 +4,8 @@
 
 Market Clock is a minimalistic command-line application that tracks the current trading status of multiple stock exchanges worldwide. It uses the released trading holidays to determine whether the markets are open or closed and counts down to the next trading event. 
 
+![](/screenshots/screen.png)
+
 ## Features
 
 - Displays trading status for major global stock exchanges including HKEX, LSE, and NYSE.
