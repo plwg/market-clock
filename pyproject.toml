@@ -9,7 +9,6 @@ authors = [
 requires-python = ">=3.9"
 dependencies = [
     "blessed>=1.20.0",
-    "pytz>=2025.1",
 ]
 
 [project.scripts]

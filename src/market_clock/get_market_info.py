@@ -1,12 +1,11 @@
 import datetime
 from datetime import date
-
-import pytz
+from zoneinfo import ZoneInfo
 
 ALL_MARKET_INFO = {
     # https://www.hkex.com.hk/Services/Trading-hours-and-Severe-Weather-Arrangements/Trading-Hours/Securities-Market
     "HKEX": {
-        "timezone": pytz.timezone("Asia/Hong_Kong"),
+        "timezone": ZoneInfo("Asia/Hong_Kong"),
         "trading_weekdays": {0, 1, 2, 3, 4},
         "start_time": datetime.time(9, 30),
         "end_time": datetime.time(16, 0),
@@ -39,7 +38,7 @@ ALL_MARKET_INFO = {
     },
     # https://www.londonstockexchange.com/equities-trading/business-days
     "LSE": {
-        "timezone": pytz.timezone("Europe/London"),
+        "timezone": ZoneInfo("Europe/London"),
         "trading_weekdays": {0, 1, 2, 3, 4},
         "start_time": datetime.time(8, 0),
         "end_time": datetime.time(16, 30),
@@ -72,7 +71,7 @@ ALL_MARKET_INFO = {
     },
     # https://www.nyse.com/markets/hours-calendars
     "NYSE": {
-        "timezone": pytz.timezone("America/New_York"),
+        "timezone": ZoneInfo("America/New_York"),
         "trading_weekdays": {0, 1, 2, 3, 4},
         "start_time": datetime.time(9, 30),
         "end_time": datetime.time(16, 0),

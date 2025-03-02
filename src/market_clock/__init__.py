@@ -1,6 +1,7 @@
 import datetime
 import time
 from itertools import cycle
+from zoneinfo import ZoneInfo
 
 from blessed import Terminal
 
@@ -65,9 +66,10 @@ def get_market_status(market_name, market_info):
             )
         # has lunch break, is currently before lunch break, next event is lunch break
         elif is_have_lunch_break and current_time < lunch_break_start:
-            event_time = timezone.localize(
-                datetime.datetime.combine(current_date, lunch_break_start)
+            event_time = datetime.datetime.combine(
+                current_date, lunch_break_start, tzinfo=timezone
             )
+
         else:
             raise ValueError("Should not be possible.")
 
@@ -79,16 +81,16 @@ def get_market_status(market_name, market_info):
     ):
         # session not sratrted, next event is start
         if current_time < start_time:
-            event_time = timezone.localize(
-                datetime.datetime.combine(current_date, start_time)
+            event_time = datetime.datetime.combine(
+                current_date, start_time, tzinfo=timezone
             )
 
         # session sratrted, in the middle of lunch break,  next event is lunch break end
         elif (
             is_have_lunch_break and lunch_break_start <= current_time <= lunch_break_end
         ):
-            event_time = timezone.localize(
-                datetime.datetime.combine(current_date, lunch_break_end)
+            event_time = datetime.datetime.combine(
+                current_date, lunch_break_end, tzinfo=timezone
             )
 
         else:
@@ -97,9 +99,9 @@ def get_market_status(market_name, market_info):
     # Not a trading day, or the trading session has already ended. Next event is the next trading day.
     else:
         next_day = get_next_trading_day(current_date, holidays, trading_weekdays)
-        event_time = timezone.localize(datetime.datetime.combine(next_day, start_time))
+        event_time = datetime.datetime.combine(next_day, start_time, tzinfo=timezone)
 
-    return is_open, event_time
+    return is_open, event_time.astimezone(ZoneInfo("UTC"))
 
 
 def main():
@@ -122,7 +124,7 @@ def main():
                         f"{market.rjust(longest_market_name_length)} "
                         f"{'OPEN 🟢' if is_open else 'CLOSED 🟠'} | "
                         f"{'Closes' if is_open else 'Opens'} in "
-                        f"{format_timedelta(event - datetime.datetime.now(ALL_MARKET_INFO[market]['timezone']))} "
+                        f"{format_timedelta(event - datetime.datetime.now(ZoneInfo('UTC')))} "
                         f"{spinner_char}"
                     )
 
