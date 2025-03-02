@@ -29,7 +29,7 @@ uv tool install market-clock
 market-clock
 ```
 
-or you can invoke it without installing
+or you can invoke it without installing:
 
 ```bash
 pip install uv
