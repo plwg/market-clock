@@ -58,7 +58,6 @@ def get_market_status(market_name, market_info):
         is_open = start_time <= current_time <= end_time
 
     if is_open:
-
         # No lunch break or pass lunch break, next event is close
         if not is_have_lunch_break or current_time > lunch_break_end:
             event_time = timezone.localize(
@@ -72,32 +71,33 @@ def get_market_status(market_name, market_info):
         else:
             raise ValueError("Should not be possible.")
 
-    else:
-
-        # This is trading day, and the session has not ended
-        if local_time.weekday() in trading_weekdays and current_date not in holidays and current_time < end_time:
-            
-            # session not sratrted, next event is start
-            if current_time < start_time:
-                event_time = timezone.localize(
-                    datetime.datetime.combine(current_date, start_time)
-                )
-
-            # session sratrted, in the middle of lunch break,  next event is lunch break end
-            elif is_have_lunch_break and lunch_break_start <= current_time <= lunch_break_end:
-                event_time = timezone.localize(
-                    datetime.datetime.combine(current_date, lunch_break_end)
-                )
-
-            else:
-                raise ValueError("Should not be possible.")
-
-        # Not a trading day, or the trading session has already ended. Next event is the next trading day.
-        else:
-            next_day = get_next_trading_day(current_date, holidays, trading_weekdays)
+    # This is trading day, and the session has not ended
+    elif (
+        local_time.weekday() in trading_weekdays
+        and current_date not in holidays
+        and current_time < end_time
+    ):
+        # session not sratrted, next event is start
+        if current_time < start_time:
             event_time = timezone.localize(
-                datetime.datetime.combine(next_day, start_time)
+                datetime.datetime.combine(current_date, start_time)
             )
+
+        # session sratrted, in the middle of lunch break,  next event is lunch break end
+        elif (
+            is_have_lunch_break and lunch_break_start <= current_time <= lunch_break_end
+        ):
+            event_time = timezone.localize(
+                datetime.datetime.combine(current_date, lunch_break_end)
+            )
+
+        else:
+            raise ValueError("Should not be possible.")
+
+    # Not a trading day, or the trading session has already ended. Next event is the next trading day.
+    else:
+        next_day = get_next_trading_day(current_date, holidays, trading_weekdays)
+        event_time = timezone.localize(datetime.datetime.combine(next_day, start_time))
 
     return is_open, event_time
 
