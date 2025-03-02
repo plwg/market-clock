@@ -1,6 +1,8 @@
 # Market Clock
 
-Market Clock is a command-line application that tracks the current trading status of multiple stock exchanges worldwide. It uses the released trading holidays to determine whether the markets are open or closed and counts down to the next trading event. 
+[Github](https://github.com/plwg/market-clock)
+
+Market Clock is a minimalistic command-line application that tracks the current trading status of multiple stock exchanges worldwide. It uses the released trading holidays to determine whether the markets are open or closed and counts down to the next trading event. 
 
 ## Features
 
@@ -11,9 +13,7 @@ Market Clock is a command-line application that tracks the current trading statu
 
 ## Table of Contents
 - [Installation](#installation)
-- [Usage](#usage)
 - [Supported Markets](#supported-markets)
-- [Configuration](#configuration)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -40,20 +40,12 @@ To exit the application, simply press `Ctrl + C`.
 
 Market Clock currently supports the following exchanges:
 
-- **HKEX (Hong Kong Exchange)**
-    - Trading Days: Monday - Friday
-    - Trading Hours: 09:30 - 16:00
-    - Lunch Break: 12:00 - 13:00 (Yes)
-  
-- **LSE (London Stock Exchange)**
-    - Trading Days: Monday - Friday
-    - Trading Hours: 08:00 - 16:30
-    - Lunch Break: None
-  
-- **NYSE (New York Stock Exchange)**
-    - Trading Days: Monday - Friday
-    - Trading Hours: 09:30 - 16:00
-    - Lunch Break: None
+| Exchange                      | Updated till|
+|-------------------------------|---------|
+| NYSE (New York Stock Exchange) | 2027 EOY  |
+| LSE (London Stock Exchange)   | 2026 EOY   |
+| HKEX (Hong Kong Exchange)     | 2025 EOY   |
+
 
 ## Contributing
 
