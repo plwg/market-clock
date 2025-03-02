@@ -3,16 +3,47 @@ from datetime import date
 
 import pytz
 
-
-def get_lse_info():
-    timezone = pytz.timezone("Europe/London")
-    return (
-        "LSE",
-        timezone,
-        datetime.time(8, 0),
-        datetime.time(16, 30),
-        datetime.time(12, 30),
-        {
+ALL_MARKET_INFO = {
+    "HKEX": {
+        "timezone": pytz.timezone("Asia/Hong_Kong"),
+        "trading_weekdays": {0, 1, 2, 3, 4},
+        "start_time": datetime.time(9, 30),
+        "end_time": datetime.time(16, 0),
+        "half_day_end_time": datetime.time(12, 00),
+        "holidays": {
+            date(2025, 1, 1),
+            date(2025, 1, 29),
+            date(2025, 1, 30),
+            date(2025, 1, 31),
+            date(2025, 4, 4),
+            date(2025, 4, 18),
+            date(2025, 4, 21),
+            date(2025, 5, 1),
+            date(2025, 5, 5),
+            date(2025, 7, 1),
+            date(2025, 10, 1),
+            date(2025, 10, 7),
+            date(2025, 10, 29),
+            date(2025, 12, 25),
+            date(2025, 12, 26),
+        },
+        "half_days": {
+            date(2025, 1, 28),  # Eve of Lunar New Year
+            date(2025, 12, 24),  # Christmas Eve
+            date(2025, 12, 31),  # New Year's Eve
+        },
+        "is_have_lunch_break": True,
+        "lunch_break_start": datetime.time(12, 0),
+        "lunch_break_end": datetime.time(13, 0),
+    },
+    # https://www.londonstockexchange.com/equities-trading/business-days
+    "LSE": {
+        "timezone": pytz.timezone("Europe/London"),
+        "trading_weekdays": {0, 1, 2, 3, 4},
+        "start_time": datetime.time(8, 0),
+        "end_time": datetime.time(16, 30),
+        "half_day_end_time": datetime.time(12, 30),
+        "holidays": {
             date(2025, 4, 18),
             date(2025, 4, 21),
             date(2025, 5, 5),
@@ -30,24 +61,22 @@ def get_lse_info():
             date(2026, 12, 28),
             date(2027, 1, 1),
         },
-        {
+        "half_days": {
             date(2025, 12, 24),
             date(2025, 12, 31),
             date(2026, 12, 24),
             date(2026, 12, 31),
         },
-    )
-
-
-def get_nyse_info():
-    timezone = pytz.timezone("America/New_York")
-    return (
-        "NYSE",
-        timezone,
-        datetime.time(9, 30),
-        datetime.time(16, 0),
-        datetime.time(13, 00),
-        {
+        "is_have_lunch_break": False,
+    },
+    # https://www.nyse.com/markets/hours-calendars
+    "NYSE": {
+        "timezone": pytz.timezone("America/New_York"),
+        "trading_weekdays": {0, 1, 2, 3, 4},
+        "start_time": datetime.time(9, 30),
+        "end_time": datetime.time(16, 0),
+        "half_day_end_time": datetime.time(13, 00),
+        "holidays": {
             date(2025, 1, 1),
             date(2025, 1, 20),
             date(2025, 2, 17),
@@ -79,7 +108,7 @@ def get_nyse_info():
             date(2027, 11, 25),
             date(2027, 12, 24),
         },
-        {
+        "half_days": {
             date(2025, 7, 3),
             date(2025, 11, 28),
             date(2025, 12, 24),
@@ -87,4 +116,6 @@ def get_nyse_info():
             date(2026, 12, 24),
             date(2027, 11, 26),
         },
-    )
+        "is_have_lunch_break": False,
+    },
+}
