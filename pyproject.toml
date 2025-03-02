@@ -1,7 +1,7 @@
 [project]
 name = "market-clock"
 version = "0.1.0"
-description = "Add your description here"
+description = "Market clock in your terminal"
 readme = "README.md"
 authors = [
     { name = "plwg", email = "56353330+plwg@users.noreply.github.com" }
