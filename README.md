@@ -1,6 +1,6 @@
 # Market Clock
 
-Market Clock is a command-line application that tracks the current trading status of multiple stock exchanges worldwide. It provides real-time updates on whether the markets are open or closed and counts down to the next trading event. 
+Market Clock is a command-line application that tracks the current trading status of multiple stock exchanges worldwide. It uses the released trading holidays to determine whether the markets are open or closed and counts down to the next trading event. 
 
 ## Features
 
@@ -33,8 +33,6 @@ or you can invoke it without installing
 pip install uv
 uvx market-clock
 ```
-
-The terminal will display the trading status of supported markets, indicating if they are currently open or closed and counting down to the next close/open.
 
 To exit the application, simply press `Ctrl + C`.
 
