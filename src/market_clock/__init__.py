@@ -1,6 +1,6 @@
 import datetime
-from enum import Enum
 import time
+from enum import Enum
 from itertools import cycle
 from zoneinfo import ZoneInfo
 
