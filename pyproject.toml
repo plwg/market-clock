@@ -1,6 +1,6 @@
 [project]
 name = "market-clock"
-version = "0.1.0"
+version = "0.1.1"
 description = "Market clock in your terminal"
 readme = "README.md"
 authors = [
@@ -9,7 +9,7 @@ authors = [
 requires-python = ">=3.9"
 dependencies = [
     "blessed>=1.20.0",
-    "pytz>=2025.1",
+    "tzdata>=2025.1",
 ]
 
 [project.scripts]

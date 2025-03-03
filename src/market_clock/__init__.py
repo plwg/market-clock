@@ -1,10 +1,21 @@
 import datetime
+from enum import Enum
 import time
 from itertools import cycle
+from zoneinfo import ZoneInfo
 
 from blessed import Terminal
 
 from market_clock.get_market_info import ALL_MARKET_INFO
+
+
+class NextTradingEvent(Enum):
+    SAME_DAY_FULL_DAY_CLOSE = 0
+    SAME_DAY_HALF_DAY_CLOSE = 1
+    SAME_DAY_OPEN = 2
+    SAME_DAY_LUNCH_START = 3
+    SAME_DAY_LUNCH_END = 4
+    NEXT_TRADING_DAY_START = 5
 
 
 def get_next_trading_day(start_date, holidays, trading_weekdays):
@@ -46,60 +57,95 @@ def get_market_status(market_name, market_info):
         msg = f"{market_name} has overlapping holidays/half-days"
         raise ValueError(msg)
 
-    if current_date in holidays or local_time.weekday() not in trading_weekdays:
+    if (local_time.weekday() not in trading_weekdays) or (current_date in holidays):
         is_open = False
+        next_trading_event = NextTradingEvent.NEXT_TRADING_DAY_START
+    # Assume in half day lunch break is cancelled
     elif current_date in half_days:
         is_open = start_time <= current_time <= half_day_end_time
-    elif is_have_lunch_break:
-        is_open = (start_time <= current_time < lunch_break_start) or (
-            lunch_break_end < current_time <= end_time
-        )
-    else:
-        is_open = start_time <= current_time <= end_time
 
-    if is_open:
+        if is_open:
+            next_trading_event = NextTradingEvent.SAME_DAY_HALF_DAY_CLOSE
 
-        # No lunch break or pass lunch break, next event is close
-        if not is_have_lunch_break or current_time > lunch_break_end:
-            event_time = timezone.localize(
-                datetime.datetime.combine(current_date, end_time)
-            )
-        # has lunch break, is currently before lunch break, next event is lunch break
-        elif is_have_lunch_break and current_time < lunch_break_start:
-            event_time = timezone.localize(
-                datetime.datetime.combine(current_date, lunch_break_start)
-            )
-        else:
-            raise ValueError("Should not be possible.")
+        elif current_time < start_time:
+            next_trading_event = NextTradingEvent.SAME_DAY_OPEN
 
-    else:
+        elif current_time > half_day_end_time:
+            next_trading_event = NextTradingEvent.NEXT_TRADING_DAY_START
 
-        # This is trading day, and the session has not ended
-        if local_time.weekday() in trading_weekdays and current_date not in holidays and current_time < end_time:
-            
-            # session not sratrted, next event is start
+    # Normal trading day
+    elif (
+        current_date not in holidays
+        and current_date not in half_days
+        and local_time.weekday() in trading_weekdays
+    ):
+        if is_have_lunch_break:
             if current_time < start_time:
-                event_time = timezone.localize(
-                    datetime.datetime.combine(current_date, start_time)
-                )
+                is_open = False
+                next_trading_event = NextTradingEvent.SAME_DAY_OPEN
 
-            # session sratrted, in the middle of lunch break,  next event is lunch break end
-            elif is_have_lunch_break and lunch_break_start <= current_time <= lunch_break_end:
-                event_time = timezone.localize(
-                    datetime.datetime.combine(current_date, lunch_break_end)
-                )
+            elif start_time <= current_time < lunch_break_start:
+                is_open = True
+                next_trading_event = NextTradingEvent.SAME_DAY_LUNCH_START
+
+            elif lunch_break_start <= current_time < lunch_break_end:
+                is_open = False
+                next_trading_event = NextTradingEvent.SAME_DAY_LUNCH_END
+
+            elif lunch_break_end <= current_time < end_time:
+                is_open = True
+                next_trading_event = NextTradingEvent.SAME_DAY_FULL_DAY_CLOSE
+
+            elif current_time >= end_time:
+                is_open = False
+                next_trading_event = NextTradingEvent.NEXT_TRADING_DAY_START
 
             else:
-                raise ValueError("Should not be possible.")
-
-        # Not a trading day, or the trading session has already ended. Next event is the next trading day.
+                raise ValueError("Unhandled case.")
         else:
-            next_day = get_next_trading_day(current_date, holidays, trading_weekdays)
-            event_time = timezone.localize(
-                datetime.datetime.combine(next_day, start_time)
-            )
+            if current_time < start_time:
+                is_open = False
+                next_trading_event = NextTradingEvent.SAME_DAY_OPEN
 
-    return is_open, event_time
+            elif start_time <= current_time < end_time:
+                is_open = True
+                next_trading_event = NextTradingEvent.SAME_DAY_FULL_DAY_CLOSE
+
+            elif current_time >= end_time:
+                is_open = False
+                next_trading_event = NextTradingEvent.NEXT_TRADING_DAY_START
+
+            else:
+                raise ValueError("Unhandled case.")
+
+    if next_trading_event == NextTradingEvent.SAME_DAY_OPEN:
+
+        event_date, event_time = current_date, start_time
+
+    elif next_trading_event == NextTradingEvent.SAME_DAY_HALF_DAY_CLOSE:
+
+        event_date, event_time = current_date, half_day_end_time
+
+    elif next_trading_event == NextTradingEvent.SAME_DAY_FULL_DAY_CLOSE:
+
+        event_date, event_time = current_date, end_time        
+
+    elif next_trading_event == NextTradingEvent.SAME_DAY_LUNCH_START:
+
+        event_date, event_time = current_date, lunch_break_start
+
+    elif next_trading_event == NextTradingEvent.SAME_DAY_LUNCH_END:
+
+        event_date, event_time = current_date, lunch_break_end
+    
+    elif next_trading_event == NextTradingEvent.NEXT_TRADING_DAY_START:
+        event_date, event_time = get_next_trading_day(current_date, holidays, trading_weekdays), start_time
+    else:
+        raise ValueError("Unhandled case.")
+    
+    next_event_date_time_utc = datetime.datetime.combine(event_date, event_time, tzinfo=timezone).astimezone(ZoneInfo("UTC"))
+
+    return is_open, next_event_date_time_utc
 
 
 def main():
@@ -120,9 +166,9 @@ def main():
 
                     clock_line = (
                         f"{market.rjust(longest_market_name_length)} "
-                        f"{'OPEN 🟢' if is_open else 'CLOSED 🟠'} | "
-                        f"{'Closes' if is_open else 'Opens'} in "
-                        f"{format_timedelta(event - datetime.datetime.now(ALL_MARKET_INFO[market]['timezone']))} "
+                        f"{'OPEN   🟢' if is_open else 'CLOSED 🟠'} | "
+                        f"{'Closes' if is_open else 'Opens '} in "
+                        f"{format_timedelta(event - datetime.datetime.now(ZoneInfo('UTC')))} "
                         f"{spinner_char}"
                     )
 
