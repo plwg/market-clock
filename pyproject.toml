@@ -1,6 +1,6 @@
 [project]
 name = "market-clock"
-version = "0.1.1"
+version = "0.1.2"
 description = "Market clock in your terminal"
 readme = "README.md"
 authors = [

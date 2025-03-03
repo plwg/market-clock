@@ -1,6 +1,6 @@
 import datetime
-from enum import Enum
 import time
+from enum import Enum
 from itertools import cycle
 from zoneinfo import ZoneInfo
 
@@ -101,7 +101,8 @@ def get_market_status(market_name, market_info):
                 next_trading_event = NextTradingEvent.NEXT_TRADING_DAY_START
 
             else:
-                raise ValueError("Unhandled case.")
+                msg = "Unhandled case."
+                raise ValueError(msg)
         else:
             if current_time < start_time:
                 is_open = False
@@ -116,34 +117,36 @@ def get_market_status(market_name, market_info):
                 next_trading_event = NextTradingEvent.NEXT_TRADING_DAY_START
 
             else:
-                raise ValueError("Unhandled case.")
+                msg = "Unhandled case."
+                raise ValueError(msg)
 
     if next_trading_event == NextTradingEvent.SAME_DAY_OPEN:
-
         event_date, event_time = current_date, start_time
 
     elif next_trading_event == NextTradingEvent.SAME_DAY_HALF_DAY_CLOSE:
-
         event_date, event_time = current_date, half_day_end_time
 
     elif next_trading_event == NextTradingEvent.SAME_DAY_FULL_DAY_CLOSE:
-
-        event_date, event_time = current_date, end_time        
+        event_date, event_time = current_date, end_time
 
     elif next_trading_event == NextTradingEvent.SAME_DAY_LUNCH_START:
-
         event_date, event_time = current_date, lunch_break_start
 
     elif next_trading_event == NextTradingEvent.SAME_DAY_LUNCH_END:
-
         event_date, event_time = current_date, lunch_break_end
-    
+
     elif next_trading_event == NextTradingEvent.NEXT_TRADING_DAY_START:
-        event_date, event_time = get_next_trading_day(current_date, holidays, trading_weekdays), start_time
+        event_date, event_time = (
+            get_next_trading_day(current_date, holidays, trading_weekdays),
+            start_time,
+        )
     else:
-        raise ValueError("Unhandled case.")
-    
-    next_event_date_time_utc = datetime.datetime.combine(event_date, event_time, tzinfo=timezone).astimezone(ZoneInfo("UTC"))
+        msg = "Unhandled case."
+        raise ValueError(msg)
+
+    next_event_date_time_utc = datetime.datetime.combine(
+        event_date, event_time, tzinfo=timezone
+    ).astimezone(ZoneInfo("UTC"))
 
     return is_open, next_event_date_time_utc
 
@@ -166,7 +169,7 @@ def main():
 
                     clock_line = (
                         f"{market.rjust(longest_market_name_length)} "
-                        f"{'OPEN   🟢' if is_open else 'CLOSED 🟠'} | "
+                        f"{'OPENED 🟢' if is_open else 'CLOSED 🟠'} | "
                         f"{'Closes' if is_open else 'Opens '} in "
                         f"{format_timedelta(event - datetime.datetime.now(ZoneInfo('UTC')))} "
                         f"{spinner_char}"
