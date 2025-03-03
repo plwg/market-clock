@@ -101,7 +101,8 @@ def get_market_status(market_name, market_info):
                 next_trading_event = NextTradingEvent.NEXT_TRADING_DAY_START
 
             else:
-                raise ValueError("Unhandled case.")
+                msg = "Unhandled case."
+                raise ValueError(msg)
         else:
             if current_time < start_time:
                 is_open = False
@@ -116,7 +117,8 @@ def get_market_status(market_name, market_info):
                 next_trading_event = NextTradingEvent.NEXT_TRADING_DAY_START
 
             else:
-                raise ValueError("Unhandled case.")
+                msg = "Unhandled case."
+                raise ValueError(msg)
 
     if next_trading_event == NextTradingEvent.SAME_DAY_OPEN:
         event_date, event_time = current_date, start_time
@@ -139,7 +141,8 @@ def get_market_status(market_name, market_info):
             start_time,
         )
     else:
-        raise ValueError("Unhandled case.")
+        msg = "Unhandled case."
+        raise ValueError(msg)
 
     next_event_date_time_utc = datetime.datetime.combine(
         event_date, event_time, tzinfo=timezone
