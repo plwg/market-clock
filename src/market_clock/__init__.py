@@ -166,8 +166,8 @@ def main():
 
                     clock_line = (
                         f"{market.rjust(longest_market_name_length)} "
-                        f"{'OPEN 🟢' if is_open else 'CLOSED 🟠'} | "
-                        f"{'Closes' if is_open else 'Opens'} in "
+                        f"{'OPEN   🟢' if is_open else 'CLOSED 🟠'} | "
+                        f"{'Closes' if is_open else 'Opens '} in "
                         f"{format_timedelta(event - datetime.datetime.now(ZoneInfo('UTC')))} "
                         f"{spinner_char}"
                     )
