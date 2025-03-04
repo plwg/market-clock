@@ -1,7 +1,5 @@
 # Market Clock
 
-[Github](https://github.com/plwg/market-clock)
-
 Market Clock is a minimalistic command-line clock that tracks the current trading status of multiple stock exchanges worldwide. It uses the released trading holidays to determine whether the markets are open or closed and counts down to the next trading event. 
 
 ![](/screenshots/screen.png)
