@@ -18,9 +18,9 @@ class NextTradingEvent(Enum):
     SAME_DAY_LUNCH_END = 4
     NEXT_TRADING_DAY_START = 5
 
+
 @lru_cache
 def get_next_trading_day(start_date, holidays, trading_weekdays):
-
     holidays = set(holidays)
     trading_weekdays = set(trading_weekdays)
 
@@ -142,7 +142,9 @@ def get_market_status(market_name, market_info):
 
     elif next_trading_event == NextTradingEvent.NEXT_TRADING_DAY_START:
         event_date, event_time = (
-            get_next_trading_day(current_date, tuple(holidays), tuple(trading_weekdays)),
+            get_next_trading_day(
+                current_date, tuple(holidays), tuple(trading_weekdays)
+            ),
             start_time,
         )
     else:
@@ -163,35 +165,31 @@ def main():
     longest_market_name_length = max(len(k) for k in ALL_MARKET_INFO)
 
     with term.fullscreen(), term.hidden_cursor():
-        try:
-            while True:
-                spinner_char = next(spinner)
+        while True:
+            spinner_char = next(spinner)
 
-                clock_lines = []
+            clock_lines = []
 
-                for market in ALL_MARKET_INFO:
-                    is_open, event = get_market_status(market, ALL_MARKET_INFO[market])
+            for market in ALL_MARKET_INFO:
+                is_open, event = get_market_status(market, ALL_MARKET_INFO[market])
 
-                    clock_line = (
-                        f"{market.rjust(longest_market_name_length)} "
-                        f"{'OPENED 🟢' if is_open else 'CLOSED 🟠'} | "
-                        f"{'Closes' if is_open else 'Opens '} in "
-                        f"{format_timedelta(event - datetime.datetime.now(ZoneInfo('UTC')))} "
-                        f"{spinner_char}"
-                    )
+                clock_line = (
+                    f"{market.rjust(longest_market_name_length)} "
+                    f"{'OPENED 🟢' if is_open else 'CLOSED 🟠'} | "
+                    f"{'Closes' if is_open else 'Opens '} in "
+                    f"{format_timedelta(event - datetime.datetime.now(ZoneInfo('UTC')))} "
+                    f"{spinner_char}"
+                )
 
-                    clock_lines.append(clock_line)
+                clock_lines.append(clock_line)
 
-                clock_lines = "\n".join(clock_lines)
+            clock_lines = "\n".join(clock_lines)
 
-                clock = term.move(0, 0) + term.clear_eos + clock_lines
+            clock = term.move(0, 0) + term.clear_eos + clock_lines
 
-                # Update display
-                print(clock)
-                time.sleep(1)
-
-        except KeyboardInterrupt:
-            print(term.move_down(2) + "Countdown stopped.")
+            # Update display
+            print(clock)
+            time.sleep(1)
 
 
 if __name__ == "__main__":
