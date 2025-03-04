@@ -28,9 +28,9 @@ ALL_MARKET_INFO = {
             date(2025, 12, 26),
         },
         "half_days": {
-            date(2025, 1, 28),  # Eve of Lunar New Year
-            date(2025, 12, 24),  # Christmas Eve
-            date(2025, 12, 31),  # New Year's Eve
+            date(2025, 1, 28),
+            date(2025, 12, 24),
+            date(2025, 12, 31),
         },
         "is_have_lunch_break": True,
         "lunch_break_start": datetime.time(12, 0),
