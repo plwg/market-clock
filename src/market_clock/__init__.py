@@ -1,6 +1,7 @@
 import datetime
 import time
 from enum import Enum
+from functools import lru_cache
 from itertools import cycle
 from zoneinfo import ZoneInfo
 
@@ -17,8 +18,12 @@ class NextTradingEvent(Enum):
     SAME_DAY_LUNCH_END = 4
     NEXT_TRADING_DAY_START = 5
 
-
+@lru_cache
 def get_next_trading_day(start_date, holidays, trading_weekdays):
+
+    holidays = set(holidays)
+    trading_weekdays = set(trading_weekdays)
+
     next_day = start_date + datetime.timedelta(days=1)
     while True:
         if next_day.weekday() in trading_weekdays and next_day not in holidays:
@@ -137,7 +142,7 @@ def get_market_status(market_name, market_info):
 
     elif next_trading_event == NextTradingEvent.NEXT_TRADING_DAY_START:
         event_date, event_time = (
-            get_next_trading_day(current_date, holidays, trading_weekdays),
+            get_next_trading_day(current_date, tuple(holidays), tuple(trading_weekdays)),
             start_time,
         )
     else:
