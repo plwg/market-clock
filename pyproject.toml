@@ -1,13 +1,13 @@
 [project]
 name = "market-clock"
-version = "0.1.4"
+version = "0.1.5"
 description = "Market clock in your terminal"
 readme = "README.md"
 keywords = ["stock market", "clock", "cli", "exchange", "trading"]
 authors = [
     { name = "plwg", email = "56353330+plwg@users.noreply.github.com" }
 ]
-license = { file = "LICENSE" }
+license = "MIT"
 classifiers = [
     "Development Status :: 4 - Beta",
     "Environment :: Console",
