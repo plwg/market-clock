@@ -3,14 +3,25 @@ name = "market-clock"
 version = "0.1.2"
 description = "Market clock in your terminal"
 readme = "README.md"
+keywords = ["stock market", "clock", "cli", "exchange", "trading"]
 authors = [
     { name = "plwg", email = "56353330+plwg@users.noreply.github.com" }
+]
+license = "MIT"
+license-files = ["LICEN[CS]E*"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
 ]
 requires-python = ">=3.9"
 dependencies = [
     "blessed>=1.20.0",
     "tzdata>=2025.1",
 ]
+
+[project.urls]
+Repository = "https://github.com/plwg/market-clock"
 
 [project.scripts]
 market-clock = "market_clock:main"
