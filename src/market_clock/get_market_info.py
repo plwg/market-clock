@@ -118,4 +118,30 @@ ALL_MARKET_INFO = {
         },
         "is_have_lunch_break": False,
     },
+    # https://www.nasdaq.com/market-activity/stock-market-holiday-schedule
+    "Nasdaq": {
+        "timezone": ZoneInfo("America/New_York"),
+        "trading_weekdays": {0, 1, 2, 3, 4},
+        "start_time": datetime.time(9, 30),
+        "end_time": datetime.time(16, 0),
+        "half_day_end_time": datetime.time(13, 00),
+        "holidays": {
+            date(2025, 1, 1),
+            date(2025, 1, 20),
+            date(2025, 2, 17),
+            date(2025, 4, 18),
+            date(2025, 5, 26),
+            date(2025, 6, 19),
+            date(2025, 7, 4),
+            date(2025, 9, 1),
+            date(2025, 11, 27),
+            date(2025, 12, 25),
+        },
+        "half_days": {
+            date(2025, 7, 3),
+            date(2025, 11, 28),
+            date(2025, 12, 24),
+        },
+        "is_have_lunch_break": False,
+    },
 }
