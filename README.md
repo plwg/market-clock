@@ -65,8 +65,6 @@ uvx market-clock --show-seconds
 uvx market-clock --list-markets
 ```
 
-This will display the trading status for the specified market. If no market is specified, it will display the status for all supported markets.
-
 Market Clock currently supports the following exchanges:
 
 | Exchange                      | Updated till| Source |
