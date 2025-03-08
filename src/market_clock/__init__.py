@@ -1,3 +1,4 @@
+import argparse
 import datetime
 import time
 from enum import Enum
@@ -159,10 +160,31 @@ def get_market_status(market_name, market_info):
 
 
 def main():
+    parser = argparse.ArgumentParser(description="Market Clock Options")
+    
+    # Add argument to show seconds, default is to hide them
+    parser.add_argument('--show-seconds', action='store_true', help='Show seconds in the output')
+    
+    # Add argument to specify markets, default is to show all
+    parser.add_argument('--markets', nargs='+', help='List of markets to show', default=[])
+
+    # Add argument to list supported markets
+    parser.add_argument('--list-markets', action='store_true', help='List all supported markets')
+
+    args = parser.parse_args()
+
+    # Check if the --list-markets argument is provided
+    if args.list_markets:
+        print("Supported Markets:")
+        for market in ALL_MARKET_INFO.keys():
+            print(f"- {market}")
+        return
     term = Terminal()
     spinner = cycle("🕛🕧🕐🕜🕑🕝🕒🕞🕓🕟🕔🕠🕕🕡🕖🕢🕗🕣🕘🕤🕙🕥🕚🕦")
 
-    longest_market_name_length = max(len(k) for k in ALL_MARKET_INFO)
+    # Filter markets based on the --markets argument
+    markets_to_display = args.markets if args.markets else ALL_MARKET_INFO.keys()
+    longest_market_name_length = max(len(k) for k in markets_to_display)
 
     with term.fullscreen(), term.hidden_cursor():
         while True:
@@ -170,14 +192,17 @@ def main():
 
             clock_lines = []
 
-            for market in ALL_MARKET_INFO:
+            for market in markets_to_display:
                 is_open, event = get_market_status(market, ALL_MARKET_INFO[market])
 
+                # Format timedelta based on --show-seconds argument
+                time_delta = event - datetime.datetime.now(ZoneInfo('UTC'))
+                formatted_time_delta = format_timedelta(time_delta) if args.show_seconds else format_timedelta(time_delta)[:-3]
                 clock_line = (
                     f"{market.rjust(longest_market_name_length)} "
                     f"{'OPENED 🟢' if is_open else 'CLOSED 🟠'} | "
                     f"{'Closes' if is_open else 'Opens '} in "
-                    f"{format_timedelta(event - datetime.datetime.now(ZoneInfo('UTC')))} "
+                    f"{formatted_time_delta} "
                     f"{spinner_char}"
                 )
 

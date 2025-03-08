@@ -1,6 +1,6 @@
 [project]
 name = "market-clock"
-version = "0.1.7"
+version = "0.1.8"
 description = "Market clock in your terminal"
 readme = "README.md"
 keywords = ["stock market", "clock", "cli", "exchange", "trading"]

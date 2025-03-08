@@ -14,6 +14,7 @@ Market Clock is a minimalistic command-line clock that tracks the current tradin
 ## Table of Contents
 - [Installation](#installation)
 - [Supported Markets](#supported-markets)
+- [Usage](#usage)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -40,7 +41,31 @@ uvx market-clock
 
 To exit the application, simply press `Ctrl + C`.
 
-## Supported Markets
+## Usage
+
+Market Clock supports several command line arguments to customize its behavior:
+
+`--markets`: Specify which market(s) to display. For example, to show only NYSE and Nasdaq:
+
+```bash
+uvx market-clock --markets NYSE Nasdaq
+```
+
+  If no market is specified, it will display the status for all supported markets.
+
+`--show-seconds`: Display seconds in the countdown timer. By default, seconds are hidden.
+
+```bash
+uvx market-clock --show-seconds
+```
+
+`--list-markets`: List all supported markets without starting the clock.
+
+```bash
+uvx market-clock --list-markets
+```
+
+This will display the trading status for the specified market. If no market is specified, it will display the status for all supported markets.
 
 Market Clock currently supports the following exchanges:
 
