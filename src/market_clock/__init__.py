@@ -168,7 +168,17 @@ def main():
     # Add argument to specify markets, default is to show all
     parser.add_argument('--markets', nargs='+', help='List of markets to show', default=[])
 
+    # Add argument to list supported markets
+    parser.add_argument('--list-markets', action='store_true', help='List all supported markets')
+
     args = parser.parse_args()
+
+    # Check if the --list-markets argument is provided
+    if args.list_markets:
+        print("Supported Markets:")
+        for market in ALL_MARKET_INFO.keys():
+            print(f"- {market}")
+        return
     term = Terminal()
     spinner = cycle("🕛🕧🕐🕜🕑🕝🕒🕞🕓🕟🕔🕠🕕🕡🕖🕢🕗🕣🕘🕤🕙🕥🕚🕦")
 
