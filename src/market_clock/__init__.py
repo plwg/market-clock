@@ -182,7 +182,16 @@ def main():
     spinner = cycle("🕛🕧🕐🕜🕑🕝🕒🕞🕓🕟🕔🕠🕕🕡🕖🕢🕗🕣🕘🕤🕙🕥🕚🕦")
 
     # Filter markets based on the --markets argument
-    markets_to_display = args.markets if args.markets else ALL_MARKET_INFO.keys()
+    try:
+        markets_to_display = (
+            args.markets if args.markets else ALL_MARKET_INFO.keys()
+        )
+        for market in markets_to_display:
+            if market not in ALL_MARKET_INFO:
+                raise ValueError(f"Unsupported market: {market}")
+    except ValueError as e:
+        print(e)
+        return
     longest_market_name_length = max(len(k) for k in markets_to_display)
 
     with term.fullscreen(), term.hidden_cursor():
