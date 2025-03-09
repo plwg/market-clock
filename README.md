@@ -45,7 +45,7 @@ To exit the application, simply press `Ctrl + C`.
 
 Market Clock supports several command line arguments to customize its behavior:
 
-`--markets`: Specify which market(s) to display. For example, to show only NYSE and Nasdaq:
+`-m`, `--markets`: Specify which market(s) to display. For example, to show only NYSE and Nasdaq:
 
 ```bash
 uvx market-clock --markets NYSE Nasdaq
@@ -53,13 +53,13 @@ uvx market-clock --markets NYSE Nasdaq
 
   If no market is specified, it will display the status for all supported markets.
 
-`--show-seconds`: Display seconds in the countdown timer. By default, seconds are hidden.
+`-s`, `--show-seconds`: Display seconds in the countdown timer. By default, seconds are hidden.
 
 ```bash
 uvx market-clock --show-seconds
 ```
 
-`--list-markets`: List all supported markets without starting the clock.
+`-lm`, `--list-markets`: List all supported markets without starting the clock.
 
 ```bash
 uvx market-clock --list-markets
