@@ -175,7 +175,7 @@ def main():
     # Check if the --list-markets argument is provided
     if args.list_markets:
         print("Supported Markets:")
-        for market in ALL_MARKET_INFO.keys():
+        for market in ALL_MARKET_INFO:
             print(f"- {market}")
         return
     term = Terminal()
