@@ -154,15 +154,21 @@ def get_market_status(market_info):
 
 def main():
     parser = argparse.ArgumentParser(description="Market Clock Options")
-    
+
     # Add argument to show seconds, default is to hide them
-    parser.add_argument('--show-seconds', action='store_true', help='Show seconds in the output')
-    
+    parser.add_argument(
+        "-s", "--show-seconds", action="store_true", help="show seconds in the output"
+    )
+
     # Add argument to specify markets, default is to show all
-    parser.add_argument('--markets', nargs='+', help='List of markets to show', default=[])
+    parser.add_argument(
+        "-m", "--markets", nargs="+", help="list of markets to show", default=[]
+    )
 
     # Add argument to list supported markets
-    parser.add_argument('--list-markets', action='store_true', help='List all supported markets')
+    parser.add_argument(
+        "-lm", "--list-markets", action="store_true", help="list all supported markets"
+    )
 
     args = parser.parse_args()
 
