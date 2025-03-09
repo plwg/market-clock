@@ -39,7 +39,7 @@ def format_timedelta(delta):
     return f"{hours:02d}:{minutes:02d}:{seconds:02d}"
 
 
-def get_market_status(market_name, market_info):
+def get_market_status(market_info):
     timezone = market_info["timezone"]
     trading_weekdays = market_info["trading_weekdays"]
     holidays = market_info["holidays"]
@@ -56,17 +56,10 @@ def get_market_status(market_name, market_info):
     current_time = local_time.time()
     current_date = local_time.date()
 
-    if current_date > max(holidays | half_days):
-        msg = f"{market_name} holiday list is not up-to-date."
-        raise ValueError(msg)
-    if holidays & half_days:
-        msg = f"{market_name} has overlapping holidays/half-days"
-        raise ValueError(msg)
-
     if (local_time.weekday() not in trading_weekdays) or (current_date in holidays):
         is_open = False
         next_trading_event = NextTradingEvent.NEXT_TRADING_DAY_START
-    # Assume in half day lunch break is cancelled
+
     elif current_date in half_days:
         is_open = start_time <= current_time <= half_day_end_time
 
