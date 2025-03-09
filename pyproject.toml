@@ -1,6 +1,6 @@
 [project]
 name = "market-clock"
-version = "0.1.8"
+version = "0.1.9"
 description = "Market clock in your terminal"
 readme = "README.md"
 keywords = ["stock market", "clock", "cli", "exchange", "trading"]
@@ -29,3 +29,8 @@ market-clock = "market_clock:main"
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3.5",
+]

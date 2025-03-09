@@ -39,7 +39,7 @@ def format_timedelta(delta):
     return f"{hours:02d}:{minutes:02d}:{seconds:02d}"
 
 
-def get_market_status(market_name, market_info):
+def get_market_status(market_info):
     timezone = market_info["timezone"]
     trading_weekdays = market_info["trading_weekdays"]
     holidays = market_info["holidays"]
@@ -56,17 +56,10 @@ def get_market_status(market_name, market_info):
     current_time = local_time.time()
     current_date = local_time.date()
 
-    if current_date > max(holidays | half_days):
-        msg = f"{market_name} holiday list is not up-to-date."
-        raise ValueError(msg)
-    if holidays & half_days:
-        msg = f"{market_name} has overlapping holidays/half-days"
-        raise ValueError(msg)
-
     if (local_time.weekday() not in trading_weekdays) or (current_date in holidays):
         is_open = False
         next_trading_event = NextTradingEvent.NEXT_TRADING_DAY_START
-    # Assume in half day lunch break is cancelled
+
     elif current_date in half_days:
         is_open = start_time <= current_time <= half_day_end_time
 
@@ -161,22 +154,28 @@ def get_market_status(market_name, market_info):
 
 def main():
     parser = argparse.ArgumentParser(description="Market Clock Options")
-    
+
     # Add argument to show seconds, default is to hide them
-    parser.add_argument('--show-seconds', action='store_true', help='Show seconds in the output')
-    
+    parser.add_argument(
+        "-s", "--show-seconds", action="store_true", help="show seconds in the output"
+    )
+
     # Add argument to specify markets, default is to show all
-    parser.add_argument('--markets', nargs='+', help='List of markets to show', default=[])
+    parser.add_argument(
+        "-m", "--markets", nargs="+", help="list of markets to show", default=[]
+    )
 
     # Add argument to list supported markets
-    parser.add_argument('--list-markets', action='store_true', help='List all supported markets')
+    parser.add_argument(
+        "-lm", "--list-markets", action="store_true", help="list all supported markets"
+    )
 
     args = parser.parse_args()
 
     # Check if the --list-markets argument is provided
     if args.list_markets:
         print("Supported Markets:")
-        for market in ALL_MARKET_INFO.keys():
+        for market in ALL_MARKET_INFO:
             print(f"- {market}")
         return
     term = Terminal()
@@ -196,8 +195,12 @@ def main():
                 is_open, event = get_market_status(market, ALL_MARKET_INFO[market])
 
                 # Format timedelta based on --show-seconds argument
-                time_delta = event - datetime.datetime.now(ZoneInfo('UTC'))
-                formatted_time_delta = format_timedelta(time_delta) if args.show_seconds else format_timedelta(time_delta)[:-3]
+                time_delta = event - datetime.datetime.now(ZoneInfo("UTC"))
+                formatted_time_delta = (
+                    format_timedelta(time_delta)
+                    if args.show_seconds
+                    else format_timedelta(time_delta)[:-3]
+                )
                 clock_line = (
                     f"{market.rjust(longest_market_name_length)} "
                     f"{'OPENED 🟢' if is_open else 'CLOSED 🟠'} | "
