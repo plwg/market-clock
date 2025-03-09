@@ -195,8 +195,12 @@ def main():
                 is_open, event = get_market_status(market, ALL_MARKET_INFO[market])
 
                 # Format timedelta based on --show-seconds argument
-                time_delta = event - datetime.datetime.now(ZoneInfo('UTC'))
-                formatted_time_delta = format_timedelta(time_delta) if args.show_seconds else format_timedelta(time_delta)[:-3]
+                time_delta = event - datetime.datetime.now(ZoneInfo("UTC"))
+                formatted_time_delta = (
+                    format_timedelta(time_delta)
+                    if args.show_seconds
+                    else format_timedelta(time_delta)[:-3]
+                )
                 clock_line = (
                     f"{market.rjust(longest_market_name_length)} "
                     f"{'OPENED 🟢' if is_open else 'CLOSED 🟠'} | "
