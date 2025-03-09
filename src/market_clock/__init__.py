@@ -192,7 +192,7 @@ def main():
             clock_lines = []
 
             for market in markets_to_display:
-                is_open, event = get_market_status(market, ALL_MARKET_INFO[market])
+                is_open, event = get_market_status(ALL_MARKET_INFO[market])
 
                 # Format timedelta based on --show-seconds argument
                 time_delta = event - datetime.datetime.now(ZoneInfo("UTC"))
