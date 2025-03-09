@@ -162,7 +162,7 @@ def main():
 
     # Add argument to specify markets, default is to show all
     parser.add_argument(
-        "-m", "--markets", nargs="+", help="list of markets to show", default=[]
+        "-m", "--markets", nargs="+", help="specify list of markets to show", default=[]
     )
 
     # Add argument to list supported markets
