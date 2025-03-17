@@ -6,7 +6,7 @@ Market Clock is a minimalistic command-line clock that tracks the current tradin
 
 ## Features
 
-- Displays trading status for major global stock exchanges including HKEX, LSE, NYSE and Nasdaq.
+- Displays trading status for major global stock exchanges.
 - Accounts for holidays and half trading days.
 - Considers lunch breaks for exchanges with lunch hours.
 - Real-time updates on when each market will open or close.
