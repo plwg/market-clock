@@ -78,7 +78,7 @@ def test_start_half_end_time_order():
         end_time = info["end_time"]
         half_day_end_time = info["half_day_end_time"]
 
-        if info["is_have_lunch_break"]:
+        if info["is_have_lunch_break"] and info["half_days"]:
             lunch_break_start = info["lunch_break_start"]
             lunch_break_end = info["lunch_break_end"]
 
@@ -93,9 +93,20 @@ def test_start_half_end_time_order():
                 f"Time out of order for {market}. Check start, half day, lunch break, and end times."
             )
 
-        else:
+        elif info["is_have_lunch_break"] and not info["half_days"]:
+            lunch_break_start = info["lunch_break_start"]
+            lunch_break_end = info["lunch_break_end"]
+            assert start_time <= lunch_break_start <= lunch_break_end <= end_time, (
+                f"Time out of order for {market}. Check start, lunch break, and end times."
+            )
+
+        elif not info["is_have_lunch_break"] and info["half_days"]:
             assert start_time <= half_day_end_time <= end_time, (
-                f"Half day end time {half_day_end_time} is out of order for {market}."
+                f"Time out of order for {market}. Check start, half day end, and end times."
+            )
+        else:
+            assert start_time <= end_time, (
+                f"Time out of order for {market}. Check start and end times."
             )
 
 

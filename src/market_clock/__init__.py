@@ -183,9 +183,7 @@ def main():
 
     # Filter markets based on the --markets argument
     try:
-        markets_to_display = (
-            args.markets if args.markets else ALL_MARKET_INFO.keys()
-        )
+        markets_to_display = args.markets if args.markets else ALL_MARKET_INFO.keys()
         for market in markets_to_display:
             if market not in ALL_MARKET_INFO:
                 raise ValueError(f"Unsupported market: {market}")
