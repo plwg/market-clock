@@ -3,6 +3,38 @@ from datetime import date
 from zoneinfo import ZoneInfo
 
 ALL_MARKET_INFO = {
+    # https://english.sse.com.cn/start/trading/schedule/
+    "SSE": {
+        "timezone": ZoneInfo("Asia/Shanghai"),
+        "trading_weekdays": {0, 1, 2, 3, 4},
+        "start_time": datetime.time(9, 15),
+        "end_time": datetime.time(15, 0),
+        "half_day_end_time": None,
+        "holidays": {
+            date(2025, 1, 1),  # New Year's Day
+            date(2025, 1, 28),  # Chinese New Year
+            date(2025, 1, 29),
+            date(2025, 1, 30),
+            date(2025, 1, 31),
+            date(2025, 2, 3),
+            date(2025, 2, 4),
+            date(2025, 4, 4),  # Qingming Festival
+            date(2025, 5, 1),  # Labor Day
+            date(2025, 5, 2),
+            date(2025, 5, 5),
+            date(2025, 6, 2),  # Dragon Boat Festival
+            date(2025, 10, 1),  # National Day
+            date(2025, 10, 2),
+            date(2025, 10, 3),
+            date(2025, 10, 6),
+            date(2025, 10, 7),
+            date(2025, 10, 8),
+        },
+        "half_days": set(),
+        "is_have_lunch_break": True,
+        "lunch_break_start": datetime.time(11, 30),
+        "lunch_break_end": datetime.time(13, 0),
+    },
     # https://www.hkex.com.hk/Services/Trading-hours-and-Severe-Weather-Arrangements/Trading-Hours/Securities-Market
     "HKEX": {
         "timezone": ZoneInfo("Asia/Hong_Kong"),
@@ -68,6 +100,8 @@ ALL_MARKET_INFO = {
             date(2026, 12, 31),
         },
         "is_have_lunch_break": False,
+        "lunch_break_start": None,
+        "lunch_break_end": None,
     },
     # https://www.nyse.com/markets/hours-calendars
     "NYSE": {
@@ -117,6 +151,8 @@ ALL_MARKET_INFO = {
             date(2027, 11, 26),
         },
         "is_have_lunch_break": False,
+        "lunch_break_start": None,
+        "lunch_break_end": None,
     },
     # https://www.nasdaq.com/market-activity/stock-market-holiday-schedule
     "Nasdaq": {
@@ -143,5 +179,7 @@ ALL_MARKET_INFO = {
             date(2025, 12, 24),
         },
         "is_have_lunch_break": False,
+        "lunch_break_start": None,
+        "lunch_break_end": None,
     },
 }

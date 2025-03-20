@@ -6,10 +6,22 @@ Market Clock is a minimalistic command-line clock that tracks the current tradin
 
 ## Features
 
-- Displays trading status for major global stock exchanges including HKEX, LSE, NYSE and Nasdaq.
+- Displays trading status for major global stock exchanges.
 - Accounts for holidays and half trading days.
 - Considers lunch breaks for exchanges with lunch hours.
 - Real-time updates on when each market will open or close.
+
+## Supported Markets
+
+Market Clock currently supports the following exchanges:
+
+| Exchange                      | Updated till| Source |
+|-------------------------------|-------------|--------|
+| SSE (Shanghai Stock Exchange) | 2025 EOY    | [SSE](https://english.sse.com.cn/start/trading/schedule/)|
+| HKEX (Hong Kong Exchange)     | 2025 EOY    | [HKEX](https://www.hkex.com.hk/Services/Trading-hours-and-Severe-Weather-Arrangements/Trading-Hours/Securities-Market) |
+| LSE (London Stock Exchange)   | 2026 EOY    | [LSE](https://www.londonstockexchange.com/equities-trading/business-days)|
+| NYSE (New York Stock Exchange)| 2027 EOY    | [NYSE](https://www.nyse.com/markets/hours-calendars)|
+| Nasdaq| 2025 EOY    | [Nasdaq](https://www.nasdaq.com/market-activity/stock-market-holiday-schedule)|
 
 ## Table of Contents
 - [Installation](#installation)
@@ -65,15 +77,11 @@ uvx market-clock --show-seconds
 uvx market-clock --list-markets
 ```
 
-Market Clock currently supports the following exchanges:
+`-p`, `--print`: Print the clock and exit immediately.
 
-| Exchange                      | Updated till| Source |
-|-------------------------------|-------------|--------|
-| NYSE (New York Stock Exchange)| 2027 EOY    | [NYSE](https://www.nyse.com/markets/hours-calendars)|
-| Nasdaq| 2025 EOY    | [Nasdaq](https://www.nasdaq.com/market-activity/stock-market-holiday-schedule)|
-| LSE (London Stock Exchange)   | 2026 EOY    | [LSE](https://www.londonstockexchange.com/equities-trading/business-days)|
-| HKEX (Hong Kong Exchange)     | 2025 EOY    | [HKEX](https://www.hkex.com.hk/Services/Trading-hours-and-Severe-Weather-Arrangements/Trading-Hours/Securities-Market) |
-
+```bash
+uvx market-clock --print
+```
 
 ## Contributing
 
