@@ -182,17 +182,27 @@ def main():
 
         # Add argument to show seconds, default is to hide them
         parser.add_argument(
-            "-s", "--show-seconds", action="store_true", help="show seconds in the output"
+            "-s",
+            "--show-seconds",
+            action="store_true",
+            help="show seconds in the output",
         )
 
         # Add argument to specify markets, default is to show all
         parser.add_argument(
-            "-m", "--markets", nargs="+", help="specify list of markets to show", default=[]
+            "-m",
+            "--markets",
+            nargs="+",
+            help="specify list of markets to show",
+            default=[],
         )
 
         # Add argument to list supported markets
         parser.add_argument(
-            "-lm", "--list-markets", action="store_true", help="list all supported markets"
+            "-lm",
+            "--list-markets",
+            action="store_true",
+            help="list all supported markets",
         )
 
         # Add argument to list supported markets
@@ -207,7 +217,9 @@ def main():
 
         if args.print:
             # Single-pass print logic
-            markets_to_display = args.markets if args.markets else ALL_MARKET_INFO.keys()
+            markets_to_display = (
+                args.markets if args.markets else ALL_MARKET_INFO.keys()
+            )
             for market in markets_to_display:
                 if market not in ALL_MARKET_INFO:
                     print(f"Unsupported market: {market}")
@@ -231,7 +243,9 @@ def main():
 
         # Filter markets based on the --markets argument
         try:
-            markets_to_display = args.markets if args.markets else ALL_MARKET_INFO.keys()
+            markets_to_display = (
+                args.markets if args.markets else ALL_MARKET_INFO.keys()
+            )
             for market in markets_to_display:
                 if market not in ALL_MARKET_INFO:
                     raise ValueError(f"Unsupported market: {market}")
@@ -254,7 +268,6 @@ def main():
                 print(clock)
                 time.sleep(1)
     except KeyboardInterrupt:
-        print("Exiting gracefully...")
         sys.exit(0)
 
 
