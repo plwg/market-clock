@@ -170,6 +170,11 @@ def main():
         "-lm", "--list-markets", action="store_true", help="list all supported markets"
     )
 
+    # Add argument to list supported markets
+    parser.add_argument(
+        "-p", "--print", action="store_true", help="print information and exit immediately"
+    )
+
     args = parser.parse_args()
 
     # Check if the --list-markets argument is provided
@@ -225,6 +230,9 @@ def main():
             # Update display
             print(clock)
             time.sleep(1)
+
+            if args.print:
+                break
 
 
 if __name__ == "__main__":
