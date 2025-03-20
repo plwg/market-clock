@@ -152,6 +152,29 @@ def get_market_status(market_info):
     return is_open, next_event_date_time_utc
 
 
+def build_clock_lines(markets_to_display, show_seconds, spinner_char):
+    current_utc = datetime.datetime.now(ZoneInfo("UTC"))
+    longest_market_name_length = max(len(m) for m in markets_to_display)
+    lines = []
+    for market in markets_to_display:
+        is_open, event = get_market_status(ALL_MARKET_INFO[market])
+        time_delta = event - current_utc
+        formatted_time_delta = (
+            format_timedelta(time_delta)
+            if show_seconds
+            else format_timedelta(time_delta)[:-3]
+        )
+        line = (
+            f"{market.rjust(longest_market_name_length)} "
+            f"{'OPENED 🟢' if is_open else 'CLOSED 🟠'} | "
+            f"{'Closes' if is_open else 'Opens '} in "
+            f"{formatted_time_delta} "
+            f"{spinner_char}"
+        )
+        lines.append(line)
+    return lines
+
+
 def main():
     parser = argparse.ArgumentParser(description="Market Clock Options")
 
@@ -185,27 +208,8 @@ def main():
                 print(f"Unsupported market: {market}")
                 return
 
-        longest_market_name_length = max(len(k) for k in markets_to_display)
         spinner_char = "🕛"
-        clock_lines = []
-
-        for market in markets_to_display:
-            is_open, event = get_market_status(ALL_MARKET_INFO[market])
-            time_delta = event - datetime.datetime.now(ZoneInfo("UTC"))
-            formatted_time_delta = (
-                format_timedelta(time_delta)
-                if args.show_seconds
-                else format_timedelta(time_delta)[:-3]
-            )
-            clock_line = (
-                f"{market.rjust(longest_market_name_length)} "
-                f"{'OPENED 🟢' if is_open else 'CLOSED 🟠'} | "
-                f"{'Closes' if is_open else 'Opens '} in "
-                f"{formatted_time_delta} "
-                f"{spinner_char}"
-            )
-            clock_lines.append(clock_line)
-
+        clock_lines = build_clock_lines(markets_to_display, args.show_seconds, spinner_char)
         print("\n".join(clock_lines))
         return
 
@@ -227,35 +231,13 @@ def main():
     except ValueError as e:
         print(e)
         return
-    longest_market_name_length = max(len(k) for k in markets_to_display)
 
     with term.fullscreen(), term.hidden_cursor():
         while True:
             spinner_char = next(spinner)
 
-            clock_lines = []
-
-            for market in markets_to_display:
-                is_open, event = get_market_status(ALL_MARKET_INFO[market])
-
-                # Format timedelta based on --show-seconds argument
-                time_delta = event - datetime.datetime.now(ZoneInfo("UTC"))
-                formatted_time_delta = (
-                    format_timedelta(time_delta)
-                    if args.show_seconds
-                    else format_timedelta(time_delta)[:-3]
-                )
-                clock_line = (
-                    f"{market.rjust(longest_market_name_length)} "
-                    f"{'OPENED 🟢' if is_open else 'CLOSED 🟠'} | "
-                    f"{'Closes' if is_open else 'Opens '} in "
-                    f"{formatted_time_delta} "
-                    f"{spinner_char}"
-                )
-
-                clock_lines.append(clock_line)
-
-            clock_lines = "\n".join(clock_lines)
+            clock_lines_list = build_clock_lines(markets_to_display, args.show_seconds, spinner_char)
+            clock_lines = "\n".join(clock_lines_list)
 
             clock = term.move(0, 0) + term.clear_eos + clock_lines
 
