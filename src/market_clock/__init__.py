@@ -177,6 +177,38 @@ def main():
 
     args = parser.parse_args()
 
+    if args.print:
+        # Single-pass print logic
+        markets_to_display = args.markets if args.markets else ALL_MARKET_INFO.keys()
+        for market in markets_to_display:
+            if market not in ALL_MARKET_INFO:
+                print(f"Unsupported market: {market}")
+                return
+
+        longest_market_name_length = max(len(k) for k in markets_to_display)
+        spinner_char = "🕛"
+        clock_lines = []
+
+        for market in markets_to_display:
+            is_open, event = get_market_status(ALL_MARKET_INFO[market])
+            time_delta = event - datetime.datetime.now(ZoneInfo("UTC"))
+            formatted_time_delta = (
+                format_timedelta(time_delta)
+                if args.show_seconds
+                else format_timedelta(time_delta)[:-3]
+            )
+            clock_line = (
+                f"{market.rjust(longest_market_name_length)} "
+                f"{'OPENED 🟢' if is_open else 'CLOSED 🟠'} | "
+                f"{'Closes' if is_open else 'Opens '} in "
+                f"{formatted_time_delta} "
+                f"{spinner_char}"
+            )
+            clock_lines.append(clock_line)
+
+        print("\n".join(clock_lines))
+        return
+
     # Check if the --list-markets argument is provided
     if args.list_markets:
         print("Supported Markets:")
@@ -230,9 +262,6 @@ def main():
             # Update display
             print(clock)
             time.sleep(1)
-
-            if args.print:
-                break
 
 
 if __name__ == "__main__":
