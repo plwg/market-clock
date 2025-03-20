@@ -77,7 +77,11 @@ uvx market-clock --show-seconds
 uvx market-clock --list-markets
 ```
 
+`-p`, `--print`: Print the clock and exit immediately.
 
+```bash
+uvx market-clock --print
+```
 
 ## Contributing
 
