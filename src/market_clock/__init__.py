@@ -195,7 +195,10 @@ def main():
 
     # Add argument to list supported markets
     parser.add_argument(
-        "-p", "--print", action="store_true", help="print information and exit immediately"
+        "-p",
+        "--print",
+        action="store_true",
+        help="print information and exit immediately",
     )
 
     args = parser.parse_args()
@@ -209,7 +212,9 @@ def main():
                 return
 
         spinner_char = "🕛"
-        clock_lines = build_clock_lines(markets_to_display, args.show_seconds, spinner_char)
+        clock_lines = build_clock_lines(
+            markets_to_display, args.show_seconds, spinner_char
+        )
         print("\n".join(clock_lines))
         return
 
@@ -236,7 +241,9 @@ def main():
         while True:
             spinner_char = next(spinner)
 
-            clock_lines_list = build_clock_lines(markets_to_display, args.show_seconds, spinner_char)
+            clock_lines_list = build_clock_lines(
+                markets_to_display, args.show_seconds, spinner_char
+            )
             clock_lines = "\n".join(clock_lines_list)
 
             clock = term.move(0, 0) + term.clear_eos + clock_lines
