@@ -1,5 +1,6 @@
 import argparse
 import datetime
+import sys
 import time
 from enum import Enum
 from functools import lru_cache
@@ -176,81 +177,85 @@ def build_clock_lines(markets_to_display, show_seconds, spinner_char):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Market Clock Options")
-
-    # Add argument to show seconds, default is to hide them
-    parser.add_argument(
-        "-s", "--show-seconds", action="store_true", help="show seconds in the output"
-    )
-
-    # Add argument to specify markets, default is to show all
-    parser.add_argument(
-        "-m", "--markets", nargs="+", help="specify list of markets to show", default=[]
-    )
-
-    # Add argument to list supported markets
-    parser.add_argument(
-        "-lm", "--list-markets", action="store_true", help="list all supported markets"
-    )
-
-    # Add argument to list supported markets
-    parser.add_argument(
-        "-p",
-        "--print",
-        action="store_true",
-        help="print information and exit immediately",
-    )
-
-    args = parser.parse_args()
-
-    if args.print:
-        # Single-pass print logic
-        markets_to_display = args.markets if args.markets else ALL_MARKET_INFO.keys()
-        for market in markets_to_display:
-            if market not in ALL_MARKET_INFO:
-                print(f"Unsupported market: {market}")
-                return
-
-        spinner_char = "🕛"
-        clock_lines = build_clock_lines(
-            markets_to_display, args.show_seconds, spinner_char
-        )
-        print("\n".join(clock_lines))
-        return
-
-    # Check if the --list-markets argument is provided
-    if args.list_markets:
-        print("Supported Markets:")
-        for market in ALL_MARKET_INFO:
-            print(f"- {market}")
-        return
-    term = Terminal()
-    spinner = cycle("🕛🕧🕐🕜🕑🕝🕒🕞🕓🕟🕔🕠🕕🕡🕖🕢🕗🕣🕘🕤🕙🕥🕚🕦")
-
-    # Filter markets based on the --markets argument
     try:
-        markets_to_display = args.markets if args.markets else ALL_MARKET_INFO.keys()
-        for market in markets_to_display:
-            if market not in ALL_MARKET_INFO:
-                raise ValueError(f"Unsupported market: {market}")
-    except ValueError as e:
-        print(e)
-        return
+        parser = argparse.ArgumentParser(description="Market Clock Options")
 
-    with term.fullscreen(), term.hidden_cursor():
-        while True:
-            spinner_char = next(spinner)
+        # Add argument to show seconds, default is to hide them
+        parser.add_argument(
+            "-s", "--show-seconds", action="store_true", help="show seconds in the output"
+        )
 
-            clock_lines_list = build_clock_lines(
+        # Add argument to specify markets, default is to show all
+        parser.add_argument(
+            "-m", "--markets", nargs="+", help="specify list of markets to show", default=[]
+        )
+
+        # Add argument to list supported markets
+        parser.add_argument(
+            "-lm", "--list-markets", action="store_true", help="list all supported markets"
+        )
+
+        # Add argument to list supported markets
+        parser.add_argument(
+            "-p",
+            "--print",
+            action="store_true",
+            help="print information and exit immediately",
+        )
+
+        args = parser.parse_args()
+
+        if args.print:
+            # Single-pass print logic
+            markets_to_display = args.markets if args.markets else ALL_MARKET_INFO.keys()
+            for market in markets_to_display:
+                if market not in ALL_MARKET_INFO:
+                    print(f"Unsupported market: {market}")
+                    return
+
+            spinner_char = "🕛"
+            clock_lines = build_clock_lines(
                 markets_to_display, args.show_seconds, spinner_char
             )
-            clock_lines = "\n".join(clock_lines_list)
+            print("\n".join(clock_lines))
+            return
 
-            clock = term.move(0, 0) + term.clear_eos + clock_lines
+        # Check if the --list-markets argument is provided
+        if args.list_markets:
+            print("Supported Markets:")
+            for market in ALL_MARKET_INFO:
+                print(f"- {market}")
+            return
+        term = Terminal()
+        spinner = cycle("🕛🕧🕐🕜🕑🕝🕒🕞🕓🕟🕔🕠🕕🕡🕖🕢🕗🕣🕘🕤🕙🕥🕚🕦")
 
-            # Update display
-            print(clock)
-            time.sleep(1)
+        # Filter markets based on the --markets argument
+        try:
+            markets_to_display = args.markets if args.markets else ALL_MARKET_INFO.keys()
+            for market in markets_to_display:
+                if market not in ALL_MARKET_INFO:
+                    raise ValueError(f"Unsupported market: {market}")
+        except ValueError as e:
+            print(e)
+            return
+
+        with term.fullscreen(), term.hidden_cursor():
+            while True:
+                spinner_char = next(spinner)
+
+                clock_lines_list = build_clock_lines(
+                    markets_to_display, args.show_seconds, spinner_char
+                )
+                clock_lines = "\n".join(clock_lines_list)
+
+                clock = term.move(0, 0) + term.clear_eos + clock_lines
+
+                # Update display
+                print(clock)
+                time.sleep(1)
+    except KeyboardInterrupt:
+        print("Exiting gracefully...")
+        sys.exit(0)
 
 
 if __name__ == "__main__":
