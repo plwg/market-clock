@@ -17,6 +17,7 @@ Market Clock currently supports the following exchanges:
 
 | Exchange                      | Updated till| Source |
 |-------------------------------|-------------|--------|
+| TSE (Tokyo Stock Exchange)    | 2026 EOY    | [TSE](https://www.jpx.co.jp/english/corporate/about-jpx/calendar/)|
 | SSE (Shanghai Stock Exchange) | 2025 EOY    | [SSE](https://english.sse.com.cn/start/trading/schedule/)|
 | HKEX (Hong Kong Exchange)     | 2025 EOY    | [HKEX](https://www.hkex.com.hk/Services/Trading-hours-and-Severe-Weather-Arrangements/Trading-Hours/Securities-Market) |
 | LSE (London Stock Exchange)   | 2026 EOY    | [LSE](https://www.londonstockexchange.com/equities-trading/business-days)|
