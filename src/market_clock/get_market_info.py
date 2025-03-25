@@ -125,6 +125,34 @@ ALL_MARKET_INFO = {
         "lunch_break_start": datetime.time(12, 0),
         "lunch_break_end": datetime.time(13, 0),
     },
+    "BSE": {
+        # https://www.bseindia.com/static/markets/marketinfo/listholi.aspx
+        "timezone": ZoneInfo("Asia/Kolkata"),
+        "trading_weekdays": {0, 1, 2, 3, 4},
+        "start_time": datetime.time(9, 15),
+        "end_time": datetime.time(15, 30),
+        "half_day_end_time": None,
+        "holidays": {
+            date(2025, 2, 26),  
+            date(2025, 3, 14),  
+            date(2025, 3, 31),  
+            date(2025, 4, 10),  
+            date(2025, 4, 14),  
+            date(2025, 4, 18),  
+            date(2025, 5, 1),   
+            date(2025, 8, 15),  
+            date(2025, 8, 27),  
+            date(2025, 10, 2),
+            date(2025, 10, 21),  # Diwali-Laxmi Pujan (Muhurat Trading)
+            date(2025, 10, 22), 
+            date(2025, 11, 5),  
+            date(2025, 12, 25),
+        },
+        "half_days": set(),
+        "is_have_lunch_break": False,
+        "lunch_break_start": None,
+        "lunch_break_end": None,
+    },
     # https://www.londonstockexchange.com/equities-trading/business-days
     "LSE": {
         "timezone": ZoneInfo("Europe/London"),
