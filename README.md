@@ -4,6 +4,15 @@ Market Clock is a minimalistic command-line clock that tracks the current tradin
 
 ![](/screenshots/screen.png)
 
+## Table of Contents
+- [Features](#features)
+- [Supported Markets](#supported-markets)
+- [Installation](#installation)
+- [Supported Markets](#supported-markets)
+- [Usage](#usage)
+- [Contributing](#contributing)
+- [License](#license)
+
 ## Features
 
 - Displays trading status for major global stock exchanges.
@@ -24,13 +33,6 @@ Market Clock currently supports the following exchanges:
 | LSE (London Stock Exchange)   | 2026 EOY    | [LSE](https://www.londonstockexchange.com/equities-trading/business-days)||
 | NYSE (New York Stock Exchange)| 2027 EOY    | [NYSE](https://www.nyse.com/markets/hours-calendars)||
 | Nasdaq| 2025 EOY    | [Nasdaq](https://www.nasdaq.com/market-activity/stock-market-holiday-schedule)||
-
-## Table of Contents
-- [Installation](#installation)
-- [Supported Markets](#supported-markets)
-- [Usage](#usage)
-- [Contributing](#contributing)
-- [License](#license)
 
 ## Installation
 
