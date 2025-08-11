@@ -1,15 +1,23 @@
+from __future__ import annotations
+
 import argparse
-import datetime
 import sys
 import time
+from datetime import date, datetime, timedelta
 from enum import Enum
 from functools import lru_cache
 from itertools import cycle
+from typing import TYPE_CHECKING, Literal
 from zoneinfo import ZoneInfo
 
 from blessed import Terminal
 
 from market_clock.get_market_info import ALL_MARKET_INFO
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable
+
+    from market_clock.get_market_info import MarketInfo
 
 
 class NextTradingEvent(Enum):
@@ -22,38 +30,40 @@ class NextTradingEvent(Enum):
 
 
 @lru_cache
-def get_next_trading_day(start_date, holidays, trading_weekdays):
-    holidays = set(holidays)
-    trading_weekdays = set(trading_weekdays)
+def get_next_trading_day(
+    start_date: date,
+    holidays: tuple[date],
+    trading_weekdays: tuple[Literal[0, 1, 2, 3, 4, 5, 6], ...],
+) -> date:
+    holidays_set = set(holidays)
+    trading_weekdays_set = set(trading_weekdays)
 
-    next_day = start_date + datetime.timedelta(days=1)
+    next_day = start_date + timedelta(days=1)
     while True:
-        if next_day.weekday() in trading_weekdays and next_day not in holidays:
+        if next_day.weekday() in trading_weekdays_set and next_day not in holidays_set:
             return next_day
-        next_day += datetime.timedelta(days=1)
+        next_day += timedelta(days=1)
 
 
-def format_timedelta(delta):
+def format_timedelta(delta: timedelta) -> str:
     total_seconds = int(delta.total_seconds())
     hours, remainder = divmod(total_seconds, 3600)
     minutes, seconds = divmod(remainder, 60)
     return f"{hours:02d}:{minutes:02d}:{seconds:02d}"
 
 
-def get_market_status(market_info):
-    timezone = market_info["timezone"]
-    trading_weekdays = market_info["trading_weekdays"]
-    holidays = market_info["holidays"]
-    half_days = market_info["half_days"]
-    start_time = market_info["start_time"]
-    end_time = market_info["end_time"]
-    half_day_end_time = market_info["half_day_end_time"]
-    is_have_lunch_break = market_info["is_have_lunch_break"]
-    if is_have_lunch_break:
-        lunch_break_start = market_info["lunch_break_start"]
-        lunch_break_end = market_info["lunch_break_end"]
+def get_market_status(market_info: MarketInfo) -> tuple[bool, date]:
+    timezone = market_info.timezone
+    trading_weekdays: set[Literal[0, 1, 2, 3, 4, 5, 6]] = market_info.trading_weekdays
 
-    local_time = datetime.datetime.now(timezone)
+    holidays = market_info.holidays
+    half_days = market_info.half_days
+    start_time = market_info.start_time
+    end_time = market_info.end_time
+    half_day_end_time = market_info.half_day_end_time
+    is_have_lunch_break = market_info.is_have_lunch_break
+
+    local_time = datetime.now(timezone)
     current_time = local_time.time()
     current_date = local_time.date()
 
@@ -62,6 +72,9 @@ def get_market_status(market_info):
         next_trading_event = NextTradingEvent.NEXT_TRADING_DAY_START
 
     elif current_date in half_days:
+        if half_day_end_time is None:
+            raise ValueError("Half day end time is not specified.")
+
         is_open = start_time <= current_time <= half_day_end_time
 
         if is_open:
@@ -80,6 +93,12 @@ def get_market_status(market_info):
         and local_time.weekday() in trading_weekdays
     ):
         if is_have_lunch_break:
+            lunch_break_start = market_info.lunch_break_start
+            lunch_break_end = market_info.lunch_break_end
+
+            if lunch_break_start is None or lunch_break_end is None:
+                raise ValueError("Lunch time start/end not specified.")
+
             if current_time < start_time:
                 is_open = False
                 next_trading_event = NextTradingEvent.SAME_DAY_OPEN
@@ -103,6 +122,7 @@ def get_market_status(market_info):
             else:
                 msg = "Unhandled case."
                 raise ValueError(msg)
+
         else:
             if current_time < start_time:
                 is_open = False
@@ -124,6 +144,9 @@ def get_market_status(market_info):
         event_date, event_time = current_date, start_time
 
     elif next_trading_event == NextTradingEvent.SAME_DAY_HALF_DAY_CLOSE:
+        if half_day_end_time is None:
+            raise ValueError("Half day end time is not specified.")
+
         event_date, event_time = current_date, half_day_end_time
 
     elif next_trading_event == NextTradingEvent.SAME_DAY_FULL_DAY_CLOSE:
@@ -146,15 +169,17 @@ def get_market_status(market_info):
         msg = "Unhandled case."
         raise ValueError(msg)
 
-    next_event_date_time_utc = datetime.datetime.combine(
+    next_event_date_time_utc = datetime.combine(
         event_date, event_time, tzinfo=timezone
     ).astimezone(ZoneInfo("UTC"))
 
     return is_open, next_event_date_time_utc
 
 
-def build_clock_lines(markets_to_display, show_seconds, spinner_char):
-    current_utc = datetime.datetime.now(ZoneInfo("UTC"))
+def build_clock_lines(
+    markets_to_display: Iterable[str], show_seconds: bool, spinner_char: str
+) -> list[str]:
+    current_utc = datetime.now(ZoneInfo("UTC"))
     longest_market_name_length = max(len(m) for m in markets_to_display)
     lines = []
     for market in markets_to_display:
@@ -176,7 +201,7 @@ def build_clock_lines(markets_to_display, show_seconds, spinner_char):
     return lines
 
 
-def main():
+def main() -> None:
     try:
         parser = argparse.ArgumentParser(description="Market Clock Options")
 
@@ -248,7 +273,8 @@ def main():
             )
             for market in markets_to_display:
                 if market not in ALL_MARKET_INFO:
-                    raise ValueError(f"Unsupported market: {market}")
+                    msg = f"Unsupported market: {market}"
+                    raise ValueError(msg)
         except ValueError as e:
             print(e)
             return
