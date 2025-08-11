@@ -273,7 +273,8 @@ def main() -> None:
             )
             for market in markets_to_display:
                 if market not in ALL_MARKET_INFO:
-                    raise ValueError(f"Unsupported market: {market}")
+                    msg = f"Unsupported market: {market}"
+                    raise ValueError(msg)
         except ValueError as e:
             print(e)
             return
