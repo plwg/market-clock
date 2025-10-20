@@ -7,7 +7,7 @@ from datetime import date, datetime, timedelta
 from enum import Enum
 from functools import lru_cache
 from itertools import cycle
-from typing import TYPE_CHECKING, Literal
+from typing import TYPE_CHECKING
 from zoneinfo import ZoneInfo
 
 from blessed import Terminal
@@ -17,7 +17,7 @@ from market_clock.get_market_info import ALL_MARKET_INFO
 if TYPE_CHECKING:
     from collections.abc import Iterable
 
-    from market_clock.get_market_info import MarketInfo
+    from market_clock.get_market_info import MarketInfo, Weekday
 
 
 class NextTradingEvent(Enum):
@@ -33,7 +33,7 @@ class NextTradingEvent(Enum):
 def get_next_trading_day(
     start_date: date,
     holidays: tuple[date],
-    trading_weekdays: tuple[Literal[0, 1, 2, 3, 4, 5, 6], ...],
+    trading_weekdays: tuple[Weekday, ...],
 ) -> date:
     holidays_set = set(holidays)
     trading_weekdays_set = set(trading_weekdays)
@@ -54,7 +54,7 @@ def format_timedelta(delta: timedelta) -> str:
 
 def get_market_status(market_info: MarketInfo) -> tuple[bool, date]:
     timezone = market_info.timezone
-    trading_weekdays: set[Literal[0, 1, 2, 3, 4, 5, 6]] = market_info.trading_weekdays
+    trading_weekdays = market_info.trading_weekdays
 
     holidays = market_info.holidays
     half_days = market_info.half_days

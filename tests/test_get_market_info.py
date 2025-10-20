@@ -16,7 +16,7 @@ def test_required_info() -> None:
         )
 
         assert all(
-            isinstance(day, int) and 0 <= day <= 6 for day in info.trading_weekdays
+            isinstance(day, get_market_info.Weekday) for day in info.trading_weekdays
         ), f"Trading weekdays for {market} must be integers from 0 to 6."
 
         assert isinstance(info.start_time, datetime.time), (

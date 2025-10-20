@@ -2,14 +2,24 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from datetime import date, time
-from typing import Literal
 from zoneinfo import ZoneInfo
+from enum import IntEnum
+
+
+class Weekday(IntEnum):
+    MON = 0
+    TUE = 1
+    WED = 2
+    THU = 3
+    FRI = 4
+    SAT = 5
+    SUN = 6
 
 
 @dataclass(frozen=True)
 class MarketInfo:
     timezone: ZoneInfo
-    trading_weekdays: set[Literal[0, 1, 2, 3, 4, 5, 6]]
+    trading_weekdays: set[Weekday]
     start_time: time
     end_time: time
     half_day_end_time: time | None
@@ -25,7 +35,13 @@ ALL_MARKET_INFO: dict[str, MarketInfo] = {
     # https://www.jpx.co.jp/english/equities/products/preferred-stocks/trading/index.html
     "TSE": MarketInfo(
         timezone=ZoneInfo("Asia/Tokyo"),
-        trading_weekdays={0, 1, 2, 3, 4},
+        trading_weekdays={
+            Weekday.MON,
+            Weekday.TUE,
+            Weekday.WED,
+            Weekday.THU,
+            Weekday.FRI,
+        },
         start_time=time(9, 0),
         end_time=time(15, 30),
         half_day_end_time=None,
@@ -81,7 +97,13 @@ ALL_MARKET_INFO: dict[str, MarketInfo] = {
     # https://english.sse.com.cn/start/trading/schedule/
     "SSE": MarketInfo(
         timezone=ZoneInfo("Asia/Shanghai"),
-        trading_weekdays={0, 1, 2, 3, 4},
+        trading_weekdays={
+            Weekday.MON,
+            Weekday.TUE,
+            Weekday.WED,
+            Weekday.THU,
+            Weekday.FRI,
+        },
         start_time=time(9, 15),
         end_time=time(15, 0),
         half_day_end_time=None,
@@ -113,7 +135,13 @@ ALL_MARKET_INFO: dict[str, MarketInfo] = {
     # https://www.hkex.com.hk/Services/Trading-hours-and-Severe-Weather-Arrangements/Trading-Hours/Securities-Market
     "HKEX": MarketInfo(
         timezone=ZoneInfo("Asia/Hong_Kong"),
-        trading_weekdays={0, 1, 2, 3, 4},
+        trading_weekdays={
+            Weekday.MON,
+            Weekday.TUE,
+            Weekday.WED,
+            Weekday.THU,
+            Weekday.FRI,
+        },
         start_time=time(9, 30),
         end_time=time(16, 0),
         half_day_end_time=time(12, 0),
@@ -146,7 +174,13 @@ ALL_MARKET_INFO: dict[str, MarketInfo] = {
     "BSE": MarketInfo(
         # https://www.bseindia.com/static/markets/marketinfo/listholi.aspx
         timezone=ZoneInfo("Asia/Kolkata"),
-        trading_weekdays={0, 1, 2, 3, 4},
+        trading_weekdays={
+            Weekday.MON,
+            Weekday.TUE,
+            Weekday.WED,
+            Weekday.THU,
+            Weekday.FRI,
+        },
         start_time=time(9, 15),
         end_time=time(15, 30),
         half_day_end_time=None,
@@ -174,7 +208,13 @@ ALL_MARKET_INFO: dict[str, MarketInfo] = {
     # https://www.londonstockexchange.com/equities-trading/business-days
     "LSE": MarketInfo(
         timezone=ZoneInfo("Europe/London"),
-        trading_weekdays={0, 1, 2, 3, 4},
+        trading_weekdays={
+            Weekday.MON,
+            Weekday.TUE,
+            Weekday.WED,
+            Weekday.THU,
+            Weekday.FRI,
+        },
         start_time=time(8, 0),
         end_time=time(16, 30),
         half_day_end_time=time(12, 30),
@@ -209,7 +249,13 @@ ALL_MARKET_INFO: dict[str, MarketInfo] = {
     # https://www.nyse.com/markets/hours-calendars
     "NYSE": MarketInfo(
         timezone=ZoneInfo("America/New_York"),
-        trading_weekdays={0, 1, 2, 3, 4},
+        trading_weekdays={
+            Weekday.MON,
+            Weekday.TUE,
+            Weekday.WED,
+            Weekday.THU,
+            Weekday.FRI,
+        },
         start_time=time(9, 30),
         end_time=time(16, 0),
         half_day_end_time=time(13, 00),
@@ -260,7 +306,13 @@ ALL_MARKET_INFO: dict[str, MarketInfo] = {
     # https://www.nasdaq.com/market-activity/stock-market-holiday-schedule
     "NASDAQ": MarketInfo(
         timezone=ZoneInfo("America/New_York"),
-        trading_weekdays={0, 1, 2, 3, 4},
+        trading_weekdays={
+            Weekday.MON,
+            Weekday.TUE,
+            Weekday.WED,
+            Weekday.THU,
+            Weekday.FRI,
+        },
         start_time=time(9, 30),
         end_time=time(16, 0),
         half_day_end_time=time(13, 00),
