@@ -67,6 +67,10 @@ def get_market_status(market_info: MarketInfo) -> tuple[bool, date]:
     current_time = local_time.time()
     current_date = local_time.date()
 
+    next_trading_event = None
+    lunch_break_start = lunch_break_end = None
+    is_open = None
+
     if (local_time.weekday() not in trading_weekdays) or (current_date in holidays):
         is_open = False
         next_trading_event = NextTradingEvent.NEXT_TRADING_DAY_START
@@ -152,10 +156,16 @@ def get_market_status(market_info: MarketInfo) -> tuple[bool, date]:
     elif next_trading_event == NextTradingEvent.SAME_DAY_FULL_DAY_CLOSE:
         event_date, event_time = current_date, end_time
 
-    elif next_trading_event == NextTradingEvent.SAME_DAY_LUNCH_START:
+    elif (
+        next_trading_event == NextTradingEvent.SAME_DAY_LUNCH_START
+        and lunch_break_start is not None
+    ):
         event_date, event_time = current_date, lunch_break_start
 
-    elif next_trading_event == NextTradingEvent.SAME_DAY_LUNCH_END:
+    elif (
+        next_trading_event == NextTradingEvent.SAME_DAY_LUNCH_END
+        and lunch_break_end is not None
+    ):
         event_date, event_time = current_date, lunch_break_end
 
     elif next_trading_event == NextTradingEvent.NEXT_TRADING_DAY_START:
@@ -172,6 +182,10 @@ def get_market_status(market_info: MarketInfo) -> tuple[bool, date]:
     next_event_date_time_utc = datetime.combine(
         event_date, event_time, tzinfo=timezone
     ).astimezone(ZoneInfo("UTC"))
+
+    if is_open is None:
+        msg = "Unhandled case."
+        raise ValueError(msg)
 
     return is_open, next_event_date_time_utc
 
