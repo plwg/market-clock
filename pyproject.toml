@@ -1,6 +1,6 @@
 [project]
 name = "market-clock"
-version = "0.2.0"
+version = "0.3.0"
 description = "Market clock in your terminal"
 readme = "README.md"
 keywords = ["stock market", "clock", "cli", "exchange", "trading"]
@@ -14,7 +14,7 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "Operating System :: OS Independent",
 ]
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 dependencies = [
     "blessed>=1.20.0",
     "tzdata>=2025.2",
