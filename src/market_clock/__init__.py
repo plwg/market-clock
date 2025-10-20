@@ -7,7 +7,7 @@ from datetime import date, datetime, timedelta
 from enum import Enum
 from functools import lru_cache
 from itertools import cycle
-from typing import TYPE_CHECKING, Literal
+from typing import TYPE_CHECKING
 from zoneinfo import ZoneInfo
 
 from blessed import Terminal
@@ -17,7 +17,7 @@ from market_clock.get_market_info import ALL_MARKET_INFO
 if TYPE_CHECKING:
     from collections.abc import Iterable
 
-    from market_clock.get_market_info import MarketInfo
+    from market_clock.get_market_info import MarketInfo, Weekday
 
 
 class NextTradingEvent(Enum):
@@ -33,7 +33,7 @@ class NextTradingEvent(Enum):
 def get_next_trading_day(
     start_date: date,
     holidays: tuple[date],
-    trading_weekdays: tuple[Literal[0, 1, 2, 3, 4, 5, 6], ...],
+    trading_weekdays: tuple[Weekday, ...],
 ) -> date:
     holidays_set = set(holidays)
     trading_weekdays_set = set(trading_weekdays)
@@ -54,7 +54,7 @@ def format_timedelta(delta: timedelta) -> str:
 
 def get_market_status(market_info: MarketInfo) -> tuple[bool, date]:
     timezone = market_info.timezone
-    trading_weekdays: set[Literal[0, 1, 2, 3, 4, 5, 6]] = market_info.trading_weekdays
+    trading_weekdays = market_info.trading_weekdays
 
     holidays = market_info.holidays
     half_days = market_info.half_days
@@ -66,6 +66,10 @@ def get_market_status(market_info: MarketInfo) -> tuple[bool, date]:
     local_time = datetime.now(timezone)
     current_time = local_time.time()
     current_date = local_time.date()
+
+    next_trading_event = None
+    lunch_break_start = lunch_break_end = None
+    is_open = None
 
     if (local_time.weekday() not in trading_weekdays) or (current_date in holidays):
         is_open = False
@@ -152,10 +156,16 @@ def get_market_status(market_info: MarketInfo) -> tuple[bool, date]:
     elif next_trading_event == NextTradingEvent.SAME_DAY_FULL_DAY_CLOSE:
         event_date, event_time = current_date, end_time
 
-    elif next_trading_event == NextTradingEvent.SAME_DAY_LUNCH_START:
+    elif (
+        next_trading_event == NextTradingEvent.SAME_DAY_LUNCH_START
+        and lunch_break_start is not None
+    ):
         event_date, event_time = current_date, lunch_break_start
 
-    elif next_trading_event == NextTradingEvent.SAME_DAY_LUNCH_END:
+    elif (
+        next_trading_event == NextTradingEvent.SAME_DAY_LUNCH_END
+        and lunch_break_end is not None
+    ):
         event_date, event_time = current_date, lunch_break_end
 
     elif next_trading_event == NextTradingEvent.NEXT_TRADING_DAY_START:
@@ -172,6 +182,10 @@ def get_market_status(market_info: MarketInfo) -> tuple[bool, date]:
     next_event_date_time_utc = datetime.combine(
         event_date, event_time, tzinfo=timezone
     ).astimezone(ZoneInfo("UTC"))
+
+    if is_open is None:
+        msg = "Unhandled case."
+        raise ValueError(msg)
 
     return is_open, next_event_date_time_utc
 
