@@ -32,7 +32,7 @@ Market Clock currently supports the following exchanges:
 | BSE (Bombay Stock Exchange)   | 2026 EOY    | [BSE](https://www.bseindia.com/static/markets/marketinfo/listholi.aspx)| Note that [Muhurat trading](https://en.wikipedia.org/wiki/Muhurat_trading) is currently not supported.|
 | LSE (London Stock Exchange)   | 2026 EOY    | [LSE](https://www.londonstockexchange.com/equities-trading/business-days)||
 | NYSE (New York Stock Exchange)| 2027 EOY    | [NYSE](https://www.nyse.com/markets/hours-calendars)||
-| Nasdaq| 2025 EOY    | [Nasdaq](https://www.nasdaq.com/market-activity/stock-market-holiday-schedule)||
+| Nasdaq| 2026 EOY    | [Nasdaq](https://www.nasdaq.com/market-activity/stock-market-holiday-schedule)||
 
 ## Installation
 
