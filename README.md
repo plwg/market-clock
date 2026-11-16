@@ -30,9 +30,9 @@ Market Clock currently supports the following exchanges:
 | SSE (Shanghai Stock Exchange) | 2026 EOY    | [SSE](https://english.sse.com.cn/start/trading/schedule/)||
 | HKEX (Hong Kong Exchange)     | 2026 EOY    | [HKEX](https://www.hkex.com.hk/Services/Trading-hours-and-Severe-Weather-Arrangements/Trading-Hours/Securities-Market) ||
 | BSE (Bombay Stock Exchange)   | 2026 EOY    | [BSE](https://www.bseindia.com/static/markets/marketinfo/listholi.aspx)| Note that [Muhurat trading](https://en.wikipedia.org/wiki/Muhurat_trading) is currently not supported.|
-| LSE (London Stock Exchange)   | 2026 EOY    | [LSE](https://www.londonstockexchange.com/equities-trading/business-days)||
-| NYSE (New York Stock Exchange)| 2027 EOY    | [NYSE](https://www.nyse.com/markets/hours-calendars)||
-| Nasdaq| 2026 EOY    | [Nasdaq](https://www.nasdaq.com/market-activity/stock-market-holiday-schedule)||
+| LSE (London Stock Exchange)   | 2027 EOY    | [LSE](https://www.londonstockexchange.com/equities-trading/business-days)||
+| NYSE (New York Stock Exchange)| 2028 EOY    | [NYSE](https://www.nyse.com/markets/hours-calendars)||
+| Nasdaq| 2027 EOY    | [Nasdaq](https://www.nasdaq.com/market-activity/stock-market-holiday-schedule)||
 
 ## Installation
 
