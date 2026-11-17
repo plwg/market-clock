@@ -79,7 +79,7 @@ def get_market_status(market_info: MarketInfo) -> tuple[bool, date]:
         if half_day_end_time is None:
             raise ValueError("Half day end time is not specified.")
 
-        is_open = start_time <= current_time <= half_day_end_time
+        is_open = start_time <= current_time < half_day_end_time
 
         if is_open:
             next_trading_event = NextTradingEvent.SAME_DAY_HALF_DAY_CLOSE
@@ -87,7 +87,7 @@ def get_market_status(market_info: MarketInfo) -> tuple[bool, date]:
         elif current_time < start_time:
             next_trading_event = NextTradingEvent.SAME_DAY_OPEN
 
-        elif current_time > half_day_end_time:
+        elif current_time >= half_day_end_time:
             next_trading_event = NextTradingEvent.NEXT_TRADING_DAY_START
 
     # Normal trading day

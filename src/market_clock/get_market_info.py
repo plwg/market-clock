@@ -124,7 +124,7 @@ ALL_MARKET_INFO: dict[str, MarketInfo] = {
             Weekday.THU,
             Weekday.FRI,
         },
-        start_time=time(9, 15),
+        start_time=time(9, 30),
         end_time=time(15, 0),
         half_day_end_time=None,
         holidays={
